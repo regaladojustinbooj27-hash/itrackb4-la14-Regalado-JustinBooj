@@ -1,26 +1,21 @@
 <!DOCTYPE html>
-<html lang="en">
+<html>
 <head>
-    <title>BookList</title>
+    <title>Books</title>
 </head>
 <body>
-    <h1>Book List</h1>
-    <p>Prepared by: Justin Booj Regalado</p>
+    <h1>Books</h1>
 
-    <table border="1" cellpadding="8"
-    <tr>
-        <th>Title</th>
-        <th>Author</th>
-        <th>Year</th>
-    <tr>
-        
+    <ul>
         @foreach ($books as $book)
-        <tr>
-            <td>{{ $book['title']}}<td>
-            <td>{{ $book['author']}}<td>
-            <td>{{ $book['year']}}<td>
-        <tr>
+            <li>
+                <a href="{{ route('books.show', $book['id']) }}">{{ $book['title'] }}</a>
+                — {{ $book['author'] }} ({{ $book['year'] }})
+            </li>
         @endforeach
-        </table>
+    </ul>
+
+    <hr>
+    <p>Justin Booj T. Regalado</p>
 </body>
 </html>
