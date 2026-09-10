@@ -1,19 +1,17 @@
-<!DOCTYPE html>
-<html>
-<head>
-    <title>{{ $book['title'] }}</title>
-</head>
-<body>
-    <h1>{{ $book['title'] }}</h1>
+@extends('layouts.app')
 
-    <p><strong>Author:</strong> {{ $book['author'] }}</p>
-    <p><strong>Year:</strong> {{ $book['year'] }}</p>
-    <p><strong>Genre:</strong> {{ $book['genre'] }}</p>
-    <p><strong>ID:</strong> {{ $book['id'] }}</p>
+@section('title', $book['title'])
 
-    <p><a href="/books">&larr; Back to all books</a></p>
+@section('content')
+    <div class="card" style="max-width: 28rem;">
+        <div class="card-body">
+            <h2 class="card-title">{{ $book['title'] }}</h2>
+            <p class="card-text"><strong>Author:</strong> {{ $book['author'] }}</p>
+            <p class="card-text"><strong>Year:</strong> {{ $book['year'] }}</p>
+            <p class="card-text"><strong>Genre:</strong> {{ $book['genre'] }}</p>
+            <p class="card-text"><strong>ID:</strong> {{ $book['id'] }}</p>
 
-    <hr>
-    <p>Justin Booj T. Regalado</p>
-</body>
-</html>
+            <a href="{{ route('books.index') }}" class="btn btn-primary">&larr; Back to all books</a>
+        </div>
+    </div>
+@endsection
