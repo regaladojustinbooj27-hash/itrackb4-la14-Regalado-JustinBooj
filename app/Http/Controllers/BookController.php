@@ -20,7 +20,11 @@ class BookController extends Controller
    
 
     
-    public function index(Request $request)
+   
+
+// ...
+
+public function index(Request $request)
 {
     $genre = $request->query('genre', null);
     $author = $request->query('author', null);
