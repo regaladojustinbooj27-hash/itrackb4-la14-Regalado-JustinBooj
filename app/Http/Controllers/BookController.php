@@ -18,12 +18,33 @@ class BookController extends Controller
         ];
     }
    
-    public function index()
-    {
-        $books = $this->getBooks();
 
-        return view('books.index', ['books' => $books]);
+    
+    public function index(Request $request)
+{
+    $genre = $request->query('genre', null);
+    $author = $request->query('author', null);
+
+    $books = $this->getBooks();
+
+    if ($genre !== null) {
+        $books = array_filter($books, function ($book) use ($genre) {
+            return strtolower($book['genre']) === strtolower($genre);
+        });
     }
+
+    if ($author !== null) {
+        $books = array_filter($books, function ($book) use ($author) {
+            return strtolower($book['author']) === strtolower($author);
+        });
+    }
+
+    return view('books.index', [
+        'books' => $books,
+        'genre' => $genre,
+        'author' => $author,
+    ]);
+}
 
     
     public function create()

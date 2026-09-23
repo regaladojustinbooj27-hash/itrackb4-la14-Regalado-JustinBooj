@@ -1,8 +1,33 @@
 @extends('layouts.app')
 
-@section('title', 'All Books')
-
+@section('title', 'All Books')  
 @section('content')
+
+    <p>
+        Showing —
+        Genre: <strong>{{ $genre ?? 'All' }}</strong> &nbsp;|&nbsp;
+        Author: <strong>{{ $author ?? 'All' }}</strong>
+    </p>
+
+    <p>
+        <strong>Genre:</strong>
+        @foreach (['Dystopian', 'Romance', 'Tragedy', 'Drama', 'Historical Fiction'] as $g)
+            <a href="{{ route('books.index', ['genre' => $g, 'author' => $author]) }}">{{ $g }}</a>
+            &nbsp;
+        @endforeach
+    </p>
+
+    <p>
+        <strong>Author:</strong>
+        @foreach (['George Orwell', 'Leo Tolstoy', 'Jane Austen', 'Harper Lee', 'F. Scott Fitzgerald'] as $a)
+            <a href="{{ route('books.index', ['genre' => $genre, 'author' => $a]) }}">{{ $a }}</a>
+            &nbsp;
+        @endforeach
+    </p>
+
+    <a href="{{ route('books.index') }}" class="btn btn-secondary btn-sm">Clear filters</a>
+    <br><br>
+
     <table class="table table-striped table-hover">
         <thead>
             <tr>
