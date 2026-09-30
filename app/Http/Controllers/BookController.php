@@ -6,67 +6,83 @@ use Illuminate\Http\Request;
 
 class BookController extends Controller
 {
-     private function getBooks()
+    private function getBooks()
     {
-        return [
-            1 => ['id' => 1, 'title' => 'War and Peace', 'author' => 'Leo Tolstoy', 'year' => 1869, 'genre' => 'Historical Fiction'],
-            2 => ['id' => 2, 'title' => 'The Great Gatsby', 'author' => 'F. Scott Fitzgerald', 'year' => 1925, 'genre' => 'Tragedy'],
-            3 => ['id' => 3, 'title' => 'Pride and Prejudice', 'author' => 'Jane Austen', 'year' => 1813, 'genre' => 'Romance'],
-            4 => ['id' => 4, 'title' => 'To Kill a Mockingbird', 'author' => 'Harper Lee', 'year' => 1960, 'genre' => 'Drama'],
-            5 => ['id' => 5, 'title' => '1984', 'author' => 'George Orwell', 'year' => 1949, 'genre' => 'Dystopian'],
-            6 => ['id' => 6, 'title' => 'Animal Farm', 'author' => 'George Orwell', 'year' => 1945, 'genre' => 'Dystopian'],
-        ];
-    }
-   
+        $path = storage_path('app/books.json');
 
-    
-   
+        $json = file_get_contents($path);
 
-// ...
-
-public function index(Request $request)
-{
-    $genre = $request->query('genre', null);
-    $author = $request->query('author', null);
-
-    $books = $this->getBooks();
-
-    if ($genre !== null) {
-        $books = array_filter($books, function ($book) use ($genre) {
-            return strtolower($book['genre']) === strtolower($genre);
-        });
+        return json_decode($json, true);
     }
 
-    if ($author !== null) {
-        $books = array_filter($books, function ($book) use ($author) {
-            return strtolower($book['author']) === strtolower($author);
-        });
+    private function saveBooks(array $books)
+    {
+        $path = storage_path('app/books.json');
+
+        file_put_contents($path, json_encode($books, JSON_PRETTY_PRINT));
     }
 
-    return view('books.index', [
-        'books' => $books,
-        'genre' => $genre,
-        'author' => $author,
-    ]);
-}
+    public function index(Request $request)
+    {
+        $author = $request->query('author', null);
+        $title = $request->query('title', null);
 
-    
+        $books = $this->getBooks();
+
+        if ($author !== null) {
+            $books = array_filter($books, function ($book) use ($author) {
+                return strtolower($book['author']) === strtolower($author);
+            });
+        }
+
+        if ($title !== null) {
+            $books = array_filter($books, function ($book) use ($title) {
+                return str_contains(strtolower($book['title']), strtolower($title));
+            });
+        }
+
+        return view('books.index', [
+            'books' => $books,
+            'author' => $author,
+            'title' => $title,
+        ]);
+    }
+
     public function create()
     {
-        //
+        return view('books.create');
     }
 
-    /**
-     * Store a newly created resource in storage.
-     */
     public function store(Request $request)
     {
-        //
+        $validated = $request->validate([
+            'isbn' => 'required|string|min:10',
+            'title' => 'required|string|max:255',
+            'author' => 'required|in:Robert C. Martin,Freeman & Robson,Marijn Haverbeke,David Sklar,Martin Fowler',
+            'pages' => 'required|integer|min:1',
+            'year' => 'required|integer|min:1000|max:' . date('Y'),
+        ]);
+
+        $books = $this->getBooks();
+
+        $nextId = empty($books) ? 1 : max(array_keys($books)) + 1;
+
+        $newBook = [
+            'id' => $nextId,
+            'isbn' => $validated['isbn'],
+            'title' => $validated['title'],
+            'author' => $validated['author'],
+            'pages' => $validated['pages'],
+            'year' => $validated['year'],
+        ];
+
+        $books[$nextId] = $newBook;
+
+        $this->saveBooks($books);
+
+        return redirect()->route('books.index')->with('success', 'Book added successfully.');
     }
 
-    /**
-     * Display the specified resource.
-     */
     public function show(string $id)
     {
         $books = $this->getBooks();
@@ -80,54 +96,18 @@ public function index(Request $request)
         return view('books.show', ['book' => $book]);
     }
 
-    /**
-     * Show the form for editing the specified resource.
-     */
     public function edit(string $id)
     {
         //
     }
 
-    /**
-     * Update the specified resource in storage.
-     */
     public function update(Request $request, string $id)
     {
         //
     }
 
-    /**
-     * Remove the specified resource from storage.
-     */
     public function destroy(string $id)
     {
         //
     }
-
-   
-    public function featured()
-    {
-        $books = $this->getBooks();
-
-        $book = $books[5]; 
-
-        return view('books.show', ['book' => $book]);
-    }
-
-
-    public function filter($genre = null)
-    {
-        $books = $this->getBooks();
-
-        if ($genre === null) {
-            return view('books.filter', ['books' => $books, 'genre' => null]);
-        }
-
-        $filtered = array_filter($books, function ($book) use ($genre) {
-            return strtolower($book['genre']) === strtolower($genre);
-        });
-
-        return view('books.filter', ['books' => $filtered, 'genre' => $genre]);
-    }
-
 }

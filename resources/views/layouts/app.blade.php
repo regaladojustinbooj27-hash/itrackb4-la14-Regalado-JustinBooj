@@ -6,6 +6,11 @@
 </head>
 
 <body>
+    @if (session('success'))
+    <div class="alert alert-success">
+        {{ session('success') }}
+    </div>
+@endif
     <div class="container mt-4">
         <h1 class="mb-3">Booj's Reading List</h1>
 

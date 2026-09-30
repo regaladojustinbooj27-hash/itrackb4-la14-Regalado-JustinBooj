@@ -1,26 +1,22 @@
 @extends('layouts.app')
 
-@section('title', 'All Books')  
+@section('title', 'All Books')
+
 @section('content')
+
+    <a href="{{ route('books.create') }}" class="btn btn-success btn-sm">+ Add a Book</a>
+    <br><br>
 
     <p>
         Showing —
-        Genre: <strong>{{ $genre ?? 'All' }}</strong> &nbsp;|&nbsp;
-        Author: <strong>{{ $author ?? 'All' }}</strong>
-    </p>
-
-    <p>
-        <strong>Genre:</strong>
-        @foreach (['Dystopian', 'Romance', 'Tragedy', 'Drama', 'Historical Fiction'] as $g)
-            <a href="{{ route('books.index', ['genre' => $g, 'author' => $author]) }}">{{ $g }}</a>
-            &nbsp;
-        @endforeach
+        Author: <strong>{{ $author ?? 'All' }}</strong> &nbsp;|&nbsp;
+        Title contains: <strong>{{ $title ?? 'anything' }}</strong>
     </p>
 
     <p>
         <strong>Author:</strong>
-        @foreach (['George Orwell', 'Leo Tolstoy', 'Jane Austen', 'Harper Lee', 'F. Scott Fitzgerald'] as $a)
-            <a href="{{ route('books.index', ['genre' => $genre, 'author' => $a]) }}">{{ $a }}</a>
+        @foreach (['Robert C. Martin', 'Freeman & Robson', 'Marijn Haverbeke', 'David Sklar', 'Martin Fowler'] as $a)
+            <a href="{{ route('books.index', ['author' => $a, 'title' => $title]) }}">{{ $a }}</a>
             &nbsp;
         @endforeach
     </p>
@@ -34,6 +30,7 @@
                 <th>#</th>
                 <th>Title</th>
                 <th>Author</th>
+                <th>Pages</th>
                 <th>Year</th>
             </tr>
         </thead>
@@ -45,16 +42,12 @@
                         <a href="{{ route('books.show', $book['id']) }}">{{ $book['title'] }}</a>
                     </td>
                     <td>{{ $book['author'] }}</td>
-                    <td>
-                        {{ $book['year'] }}
-                        @if ($book['year'] < 1900)
-                            <span class="badge bg-secondary">Classic</span>
-                        @endif
-                    </td>
+                    <td>{{ $book['pages'] }}</td>
+                    <td>{{ $book['year'] }}</td>
                 </tr>
             @empty
                 <tr>
-                    <td colspan="4">There are no books to show right now </td>
+                    <td colspan="5">There are no books to show right now</td>
                 </tr>
             @endforelse
         </tbody>
