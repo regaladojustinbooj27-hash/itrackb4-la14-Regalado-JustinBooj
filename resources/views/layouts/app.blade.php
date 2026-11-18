@@ -1,28 +1,31 @@
 <!DOCTYPE html>
-<html>
+<html lang="en">
 <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
     <title>@yield('title', 'Books')</title>
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
 </head>
-
 <body>
-    @if (session('success'))
-    <div class="alert alert-success">
-        {{ session('success') }}
-    </div>
-@endif
+    @include('partials._nav')
+
+    
+
     <div class="container mt-4">
-        <h1 class="mb-3">Booj's Reading List</h1>
+    @auth
+        <small class="text-muted">Signed in as {{ auth()->user()->name }}</small>
+    @endauth
 
-        @include('partials._nav')
+    @if (session('success'))
+        <div class="alert alert-success">{{ session('success') }}</div>
+    @endif
 
-        <hr>
+    @yield('content')
 
-        @yield('content')
+    <hr>
+    <p class="text-muted">Justin Booj T. Regalado</p>
+</div>
 
-        <hr>
-        <p class="text-muted">Justin Booj T. Regalado</p>
-    </div>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
 </body>
 </html>
-

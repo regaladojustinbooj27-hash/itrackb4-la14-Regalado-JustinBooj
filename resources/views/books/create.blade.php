@@ -3,66 +3,49 @@
 @section('title', 'Add a Book')
 
 @section('content')
-
     <h2>Add a Book</h2>
 
-    <form method="POST" action="{{ route('books.store') }}">
+    <form method="POST" action="{{ route('books.store') }}" style="max-width: 28rem;">
         @csrf
 
         <div class="mb-3">
-            <label for="isbn" class="form-label">ISBN</label>
-            <input type="text" name="isbn" id="isbn"
-                   class="form-control @error('isbn') is-invalid @enderror"
-                   value="{{ old('isbn') }}">
-            @error('isbn')
-                <div class="invalid-feedback">{{ $message }}</div>
-            @enderror
-        </div>
-
-        <div class="mb-3">
             <label for="title" class="form-label">Title</label>
-            <input type="text" name="title" id="title"
-                   class="form-control @error('title') is-invalid @enderror"
-                   value="{{ old('title') }}">
-            @error('title')
-                <div class="invalid-feedback">{{ $message }}</div>
-            @enderror
+            <input type="text" id="title" name="title" value="{{ old('title') }}" class="form-control">
+            @error('title') <div class="text-danger">{{ $message }}</div> @enderror
         </div>
 
         <div class="mb-3">
             <label for="author" class="form-label">Author</label>
-            <select name="author" id="author"
-                    class="form-select @error('author') is-invalid @enderror">
-                <option value="" disabled {{ old('author') ? '' : 'selected' }}>Choose an author</option>
-                @foreach (['Robert C. Martin', 'Freeman & Robson', 'Marijn Haverbeke', 'David Sklar', 'Martin Fowler'] as $a)
-                    <option value="{{ $a }}" {{ old('author') === $a ? 'selected' : '' }}>
-                        {{ $a }}
-                    </option>
-                @endforeach
-            </select>
-            @error('author')
-                <div class="invalid-feedback">{{ $message }}</div>
-            @enderror
-        </div>
-
-        <div class="mb-3">
-            <label for="pages" class="form-label">Pages</label>
-            <input type="number" name="pages" id="pages"
-                   class="form-control @error('pages') is-invalid @enderror"
-                   value="{{ old('pages') }}">
-            @error('pages')
-                <div class="invalid-feedback">{{ $message }}</div>
-            @enderror
+            <input type="text" id="author" name="author" value="{{ old('author') }}" class="form-control">
+            @error('author') <div class="text-danger">{{ $message }}</div> @enderror
         </div>
 
         <div class="mb-3">
             <label for="year" class="form-label">Year</label>
-            <input type="number" name="year" id="year"
-                   class="form-control @error('year') is-invalid @enderror"
-                   value="{{ old('year') }}">
-            @error('year')
-                <div class="invalid-feedback">{{ $message }}</div>
-            @enderror
+            <input type="number" id="year" name="year" value="{{ old('year') }}" class="form-control">
+            @error('year') <div class="text-danger">{{ $message }}</div> @enderror
+        </div>
+
+        <div class="mb-3">
+            <label for="is_available" class="form-label">Available?</label>
+            <select id="is_available" name="is_available" class="form-select">
+                <option value="1" @selected(old('is_available', '1') == '1')>Yes</option>
+                <option value="0" @selected(old('is_available') === '0')>No</option>
+            </select>
+            @error('is_available') <div class="text-danger">{{ $message }}</div> @enderror
+        </div>
+
+        <div class="mb-3">
+            <label for="genre_id" class="form-label">Genre</label>
+            <select id="genre_id" name="genre_id" class="form-select">
+                <option value="">Choose a genre</option>
+                @foreach ($genres as $genre)
+                    <option value="{{ $genre->id }}"
+                        @selected(old('genre_id') == $genre->id)
+                    >{{ $genre->name }}</option>
+                @endforeach
+            </select>
+            @error('genre_id') <div class="text-danger">{{ $message }}</div> @enderror
         </div>
 
         <button type="submit" class="btn btn-primary">Save Book</button>

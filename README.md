@@ -1,8 +1,8 @@
-Q1
-GET puts form data in the URL, so refreshing repeats the request and may create duplicates. POST + Redirect prevents this; refresh only repeats the harmless GET.
+J1
+My HomeController is not a resource controller because it only handles the home page. Unlike a resource controller, it does not need to provide other CRUD methods such as create() and store() for managing books.
 
-Q2
-validate() throws an exception when a rule fails, stopping store(). Laravel redirects back with the old input and errors.
+J2
+Before adding withQueryString(), the pagination links only contained the page number and did not include the search term or filters. Because of this, the controller received no search or filter values when I moved to another page, causing the results to reset.
 
-Q3
-The success message is flashed for only one request using ->with('success', ...), so the layout displays it once and then it disappears.
+J3
+A misspelled sort value is worse than an error because the page still loads but may not sort the books as expected, making the problem harder to notice. The allowed list ensures that only title and year can be used for sorting, while invalid values automatically fall back to title.
